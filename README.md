@@ -15,6 +15,9 @@ Hackathon-ready beginner-friendly full-stack demo.
 4. Run `npm start`.
 5. Open `http://localhost:3000`.
 
+## SQLite database location
+By default, the app creates `data/smartstock.db` in the project directory and creates the `data` folder if needed. To use another writable location, set `SMARTSTOCK_DB_PATH` to the database file path before starting the app. On a hosted service, use a writable persistent disk path so the SQLite database survives restarts; for example, set `SMARTSTOCK_DB_PATH=/var/data/smartstock.db` when the disk is mounted at `/var/data`.
+
 ## Problem mapping
 - Product `space` = weight/capacity consumed.
 - Product `benefit` = expected business benefit/profit.

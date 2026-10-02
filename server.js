@@ -1,10 +1,25 @@
 const express = require('express');
+const fs = require('fs');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const db = new sqlite3.Database(path.join(__dirname, 'data', 'smartstock.db'));
+const DB_PATH = path.resolve(process.env.SMARTSTOCK_DB_PATH || path.join(__dirname, 'data', 'smartstock.db'));
+
+try {
+  fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+} catch (err) {
+  console.error(`Unable to create SQLite database directory for "${DB_PATH}":`, err);
+  process.exit(1);
+}
+
+const db = new sqlite3.Database(DB_PATH, err => {
+  if (err) {
+    console.error(`Unable to open SQLite database at "${DB_PATH}":`, err);
+    process.exit(1);
+  }
+});
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -151,3 +166,4 @@ app.get(/.*/, (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.h
 initDb().then(() => {
   app.listen(PORT, () => console.log(`SmartStock running at http://localhost:${PORT}`));
 }).catch(err => { console.error(err); process.exit(1); });
+
