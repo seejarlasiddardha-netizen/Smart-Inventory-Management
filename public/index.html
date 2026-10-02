@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartStock | 0/1 Knapsack Inventory Optimizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="brand">SmartStock</div>
+      <div class="subtitle">Smart Inventory Management • 0/1 Knapsack</div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">OPTIMIZE • ANALYZE • STOCK</p>
+        <h1>Choose the right products for limited storage.</h1>
+        <p>Use the 0/1 Knapsack algorithm to maximize expected benefit while never exceeding warehouse capacity.</p>
+      </div>
+      <div class="hero-card">
+        <span>Algorithm</span>
+        <strong>0/1 Knapsack</strong>
+        <small>Each product: Stock once OR don't stock</small>
+      </div>
+    </section>
+
+    <section class="stats" id="stats">
+      <div class="stat"><span>Products</span><strong id="statProducts">0</strong></div>
+      <div class="stat"><span>Total Space</span><strong id="statSpace">0</strong></div>
+      <div class="stat"><span>Total Benefit</span><strong id="statBenefit">₹0</strong></div>
+      <div class="stat"><span>Last Optimization</span><strong id="statLast">—</strong></div>
+    </section>
+
+    <section class="grid two">
+      <div class="panel">
+        <div class="panel-head"><h2>Add Product</h2><span>Database</span></div>
+        <form id="productForm" class="form-grid">
+          <label>Product Name<input id="name" required placeholder="e.g. Tablet" /></label>
+          <label>Category<input id="category" placeholder="Electronics" /></label>
+          <label>Storage Space<input id="space" required type="number" min="1" step="1" placeholder="5" /></label>
+          <label>Expected Benefit<input id="benefit" required type="number" min="0" step="0.01" placeholder="80" /></label>
+          <button class="primary" id="addProductBtn" type="submit">+ Add Product</button>
+        </form>
+      </div>
+
+      <div class="panel optimize-panel">
+        <div class="panel-head"><h2>Run Optimization</h2><span>Algorithm</span></div>
+        <label>Warehouse Capacity
+          <input id="capacity" type="number" min="1" step="1" value="10" />
+        </label>
+        <button class="primary big" id="optimizeBtn">Optimize Inventory →</button>
+        <p class="hint">The backend builds a DP table and reconstructs the selected products.</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Product Catalog</h2><span id="productCountLabel">0 products</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Category</th><th>Space</th><th>Benefit</th><th>Benefit/Space</th><th></th></tr></thead>
+          <tbody id="productTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="resultSection" class="panel result hidden">
+      <div class="panel-head"><h2>Optimization Result</h2><span>0/1 Knapsack Output</span></div>
+      <div class="result-grid">
+        <div class="result-card"><span>Maximum Benefit</span><strong id="maxBenefit">₹0</strong></div>
+        <div class="result-card"><span>Space Used</span><strong id="usedSpace">0</strong></div>
+        <div class="result-card"><span>Remaining Space</span><strong id="remainingSpace">0</strong></div>
+        <div class="result-card"><span>Products Selected</span><strong id="selectedCount">0</strong></div>
+      </div>
+      <h3>Recommended Stock</h3>
+      <div id="selectedProducts" class="selected-list"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Benefit Comparison</h2><span>Current catalog</span></div>
+      <div id="chart" class="chart"></div>
+      <p class="chart-note">Bars show expected benefit. The final recommendation is determined by the dynamic-programming solution, not by benefit/space ratio alone.</p>
+    </section>
+
+    <section class="panel explanation">
+      <div class="panel-head"><h2>How the Algorithm Works</h2><span>DAA concept</span></div>
+      <div class="steps">
+        <div><b>1</b><p><strong>Define state:</strong> <code>dp[i][c]</code> stores the maximum benefit using the first <code>i</code> products with capacity <code>c</code>.</p></div>
+        <div><b>2</b><p><strong>Don't select:</strong> keep <code>dp[i-1][c]</code>.</p></div>
+        <div><b>3</b><p><strong>Select:</strong> use <code>benefit + dp[i-1][c-space]</code> when the product fits.</p></div>
+        <div><b>4</b><p><strong>Take maximum:</strong> compare selecting vs skipping.</p></div>
+        <div><b>5</b><p><strong>Backtrack:</strong> move from the last DP cell to identify exactly which products were selected.</p></div>
+      </div>
+      <div class="complexity"><strong>Time:</strong> O(n × C) &nbsp; • &nbsp; <strong>Space:</strong> O(n × C)</div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
