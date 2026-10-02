@@ -31,7 +31,7 @@ function renderProducts() {
       <td><button class="delete" onclick="deleteProduct(${p.id})">Delete</button></td>
     </tr>`).join('');
 }
-function escapeHtml(value) { return String(value).replace(/[&<>']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+function escapeHtml(value) { return String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
 async function deleteProduct(id) { try { await api(`/api/products/${id}`, {method:'DELETE'}); toast('Product deleted'); await loadProducts(); } catch(e) { toast(e.message); } }
 window.deleteProduct = deleteProduct;
 
